@@ -1,0 +1,35 @@
+﻿truncate table dbo.activity_empformli;
+
+truncate table dbo.hr_survey_emp_options;
+
+truncate table dbo.pay_salary_temp;
+
+truncate table dbo.pay_salary_computed;
+
+truncate table dbo.PAY_SALARY;
+
+truncate table dbo.tr_prgbatch_emp_options;
+
+truncate table dbo.pf_payments;
+
+truncate table dbo.PF_REGISTER;
+
+truncate table dbo.hr_survey_emp_questions;
+
+truncate table dbo.pay_salarycomputedbackup;
+
+truncate table dbo.ars_empattendance;
+
+
+truncate table dbo.audituserlogin;
+
+truncate table pay_salarycomputedtembackup;
+truncate table activity_empApplication_approve;
+truncate table approval_processflow;
+truncate table sta_register;
+truncate table auditlog;
+truncate table activity_empformApplication;
+truncate table sta_payments;
+truncate table tr_prgbatch_emp_questions;
+truncate table em_monthattributes;
+truncate table pay_empattributes;

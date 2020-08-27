@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "PrintConsultation";
+    Layout = "~/Views/Shared/e_Master.cshtml";
+}
+@section styles{
+    <link href="~/CommonJS/datatables.bootstrap.css" rel="stylesheet" />
+}
+<div class="page-header">
+    <div class="page-block">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Print Consultation</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/Dashboard/admin"><i class="feather icon-home"></i></a></li>
+                    <li class="breadcrumb-item"><a href="#!">Task</a></li>
+                    <li class="breadcrumb-item"><a href="/Task/PrintConsultation">Print Consultation</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-body">
+    <div class="page-wrapper">
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <!-- [ Invoice ] start -->
+            <div class="container " id="printTable">
+                <div>
+                    <div class="card hei-75 wid-75 bg-light d-inline-block mr-2 border border-primary">
+
+                        <div class="card-block">
+                            <div class="row invoive-info">
+                                <div class="col-md-4 col-xs-12 invoice-client-info">
+                                    <h6 class="text-uppercase text-primary">Doctor Information :</h6>
+                                    <h6 class="m-0">Josephin Villa</h6>
+                                    <p class="m-0 m-t-10">1065 Mandan Road, Columbia MO, Missouri. (123)-65202</p>
+                                    <p class="m-0">(1234) - 567891</p>
+                                    <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">demo@gmail.com</a></p>
+                                </div>
+                                <br />
+                                <br />
+                                <br />
+
+                                <div class="col-md-4 col-xs-12" style="height: auto; font-size: 40px;text-align: center; font-family: 'Malgun Gothic'; font-weight: bold;">
+
+                                    <img src="~/Assets/images/orgLogo.jpg" style="width: 110px; " />
+
+                                </div>
+
+                                <div class="col-md-4 col-xs-12">
+                                    <h6 class="text-uppercase text-primary">Address Details :</h6>
+                                    <h6 class="m-0">Josephin Villa</h6>
+                                    <p class="m-0 m-t-10">1065 Mandan Road, Columbia MO, Missouri. (123)-65202</p>
+                                    <p class="m-0">(1234) - 567891</p>
+                                    <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">demo@gmail.com</a></p>
+                                </div>
+                            </div>
+                            <div class="card-body border-top show">
+                                <h6 class="text-uppercase text-primary">Patient Information :</h6>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">Patient Name: </label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">Age: </label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">Sex: </label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">Mobile No: </label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">ECG:</label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">Co Morbidities:</label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">Echo:</label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label font-weight-bolder">BP/PR:</label>
+                                            Lary Doe
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table class="table  invoice-detail-table">
+                                            <thead>
+                                                <tr class="thead-default">
+                                                    <th>Drug Id</th>
+                                                    <th>Drug Name</th>
+                                                    <th>Dose Qty</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tbody>
+
+                                                <tr ng-repeat=" row in TestList">
+                                                    <td>{{ $index +   1 }}</td>
+                                                    <td>{{ row.DrugName }}</td>
+                                                    <td>{{ row.Dose_Qty }}</td>
+                                                   
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="">
+                                    <h6 class="text-uppercase text-primary">Docotor Report :</h6>
+                                    <p>
+                                        lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-sm-12 invoice-btn-group text-center">
+                        <button type="button" class="btn btn-primary btn-print-invoice m-b-10">Print</button>
+                        <button type="button" class="btn btn-secondary m-b-10 ">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Invoice ] end -->
+    </div>
+    <!-- [ Main Content ] end -->
+</div>

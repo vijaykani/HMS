@@ -1,0 +1,274 @@
+﻿
+@{
+    ViewBag.Title = "PatientHistory";
+    Layout = "~/Views/Shared/e_Master.cshtml";
+}
+@section styles{
+    <link href="~/CommonJS/datatables.bootstrap.css" rel="stylesheet" />
+}
+<div ng-app="PatienthistoryApp" ng-controller="PatienthistoryCtrl" ng-cloak>
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">Patient History</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/Dashboard/admin"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="#!">Reports</a></li>
+                        <li class="breadcrumb-item"><a href="/Reports/PatientHistory">PatientHistory</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+
+                        <div class="card-body collapse show">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input id="Fromdate" type="text" name="SED" ng-model="obj.FROMDATE" id="Fromdate" placeholder="From Date" class="form-control datepickerFuction" autocomplete="off">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input id="Todate" type="text" name="SED" ng-model="obj.TODATE" id="Todate" placeholder="To Date" class="form-control datepickerFuction" autocomplete="off">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="input-group-right">
+                                        <input type="button" class="btn btn-outline-primary" ng-disabled="!obj.TODATE" ng-click="FetchPatientHistoryReport(obj)" value="View" />
+                                        <input type="button" class="btn btn-outline-danger" ng-click="CancelPatientReport()" value="Cancel" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-show="IsListDivVisible">
+                                <div class="table-responsive m-t-40">
+
+                                    <div class="input-group-right">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export As</button>
+                                        <div class="dropdown-menu" x-placement="top-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -15px, 0px); min-width: 5rem!important; background-color: khaki!important; color: #FE8!important;">
+                                            <a class="dropdown-item" href="#!" ng-click="exportToExcel('#ProductList')" style="font-size: 13px;">
+                                                EXCEL
+                                                @*<img src="~/Assets/images/Components/Excel1.png" style="width: 30px;" />*@ <i class="fas fa-file-excel"></i>
+                                            </a>
+                                            <a class="dropdown-item" href="#!" ng-click="exportToPDF('ProductList')" style="font-size: 13px;">
+                                                PDF
+                                                @*<img src="~/Assets/images/Components/Excel1.png" style="width: 30px;" />*@ <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <table class="table table-striped table-hover dataTable no-footer" datatable="ng" dt-options="vm.dtOptions" width="100%" id="ProductList">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>PatientVisit ID</th>
+                                                <th>PatientName</th>
+                                                <th>Mobile Number</th>
+                                                <th>Current Address</th>
+                                                <th>Visit date</th>
+                                                <th>View Patient Details</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr ng-repeat="row in PatientReportList">
+                                                <td>{{ $index+1  }}</td>
+                                                <td>{{ row.PatientVisitID }}</td>
+                                                <td>{{ row.PatientName }}</td>
+                                                <td>{{ row.PMobileno }}</td>
+                                                <td>{{ row.Current_address }}</td>
+                                                <td>{{ row.Visitdate }}</td>
+                                                <td>
+
+                                                    <a>@*<i class="fa fa-edit text-primary" title="Edit" ng-click="Patienthistory(row,'E')" data-toggle="modal" data-target="#printTable" style="padding-right: 10px;"></i>*@</a>
+                                                    <button type="button" class="btn btn-outline-primary" ng-click="Patienthistory(row,'E')" data-toggle="modal" data-target="#printTable"><i class="feather icon-eye"></i>&nbsp;View <span class="ripple ripple-animate" style="height: 60.4886px; width: 60.4886px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(255, 255, 255); opacity: 0.4; top: -10.3296px; left: -6.78418px;"></span></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                            <div class=" modal fade" id="printTable" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" ng-show="Print">
+                                <div class="modal-dialog" style="max-width:900px;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">View Patient Details</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="container printTable " id="printTable" ng-show="Print">
+                                                <div>
+                                                    <div class="card hei-75 wid-75 bg-light d-inline-block mr-2 border border-primary" style="width:100%;">
+
+                                                        <div class="card-block" id="test">
+                                                            <div class="row invoive-info">
+                                                                <div class="col-md-4 col-xs-12 invoice-client-info">
+                                                                    <h6 class="text-uppercase text-primary">Doctor Information :</h6>
+                                                                    <h6 class="m-0" id="lblDocNam"></h6>
+                                                                    <p class="m-0 m-t-10" id="lblspeciality"></p>
+                                                                    <p class="m-0" id="lblemaildoctor"><a class="text-secondary" href="" target="_top"></a></p>
+                                                                </div>
+
+                                                                <div class="col-md-4 col-xs-12" style="height: auto; font-size: 40px;text-align: center; font-family: 'Malgun Gothic'; font-weight: bold;">
+
+                                                                    <img src="~/Assets/images/172-512.png" style="width: 110px; " />
+
+                                                                </div>
+
+                                                                <div class="col-md-4 col-xs-12">
+                                                                    <h6 class="text-uppercase text-primary">Address Details :</h6>
+                                                                    <h6 class="m-0" id="lbladdress"></h6>
+                                                                    <p class="m-0 m-t-10" id="lbldmobileno">1065 Mandan Road, Columbia MO, Missouri. (123)-65202</p>
+                                                                    @*<p class="m-0 m-t-10" id="lbldemail"><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">demo@gmail.com</a></p>*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body border-top show">
+                                                                <h6 class="text-uppercase text-primary">Patient Information :</h6>
+                                                                <br />
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+
+                                                                            <label class="col-form-label font-weight-bolder">Patient : </label>
+                                                                            <label class="col-form-label font-weight-bolder" id="lblpname"></label>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">Age: </label>
+                                                                            <label class="col-form-label font-weight-bolder" id="lblage"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">Sex: </label>
+                                                                            <label class="col-form-label font-weight-bolder" id="lblsex"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">Mobile: </label>
+                                                                            <label class="col-form-label font-weight-bolder" id="lblpmobileno"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">ECG:</label>
+                                                                            Lary Doe
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">Co Morbidities:</label>
+                                                                            Lary Doe
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">Echo:</label>
+                                                                            Lary Doe
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <label class="col-form-label font-weight-bolder">BP/PR:</label>
+                                                                            <label class="col-form-label font-weight-bolder" id="lblBP"></label>
+                                                                            <label class="col-form-label font-weight-bolder" id="lblBPdia"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table  invoice-detail-table">
+                                                                            <thead>
+                                                                                <tr class="thead-default">
+                                                                                    <th>Dose Id</th>
+                                                                                    <th>Dose Name</th>
+                                                                                    <th>Dose Qty</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            <tbody>
+
+                                                                                <tr ng-repeat=" row in PrintList">
+                                                                                    <td>{{ $index +   1 }}</td>
+                                                                                    <td>{{ row.DrugName }}</td>
+                                                                                    <td>{{ row.Dose_qty }}</td>
+
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <h6 class="text-uppercase text-primary">Docotor Report :</h6>
+                                                                    <label class="col-form-label font-weight-bolder" id="lbldreport" style="white-space:pre-wrap;"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @*<div class="row text-center">
+                                                        <div class="col-sm-12 invoice-btn-group text-center">
+                                                            <button type="button" ng-click="Print()" class="btn btn-primary btn-print-invoice m-b-10">Print</button>
+                                                            <button type="button" ng-click="CancelPrint()" class="btn btn-secondary m-b-10 ">Cancel</button>
+                                                        </div>
+                                                    </div>*@
+
+                                                <div style="text-align:end;" class="col-md-12">
+                                                    <button type="button" ng-click="PrintS()" class="btn btn-outline-secondary" title="" data-toggle="tooltip" data-original-title="Print Preview">Print</button>
+                                                    <button type="button" ng-click="export_div()" class="btn btn-outline-secondary" title="" data-toggle="tooltip" data-original-title="Print Preview">Save</button>
+                                                    <a class="btn btn-outline-danger " title="Cancel" data-dismiss="modal" data-toggle="tooltip" data-original-title="Cancel">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="../CommonJS/jquery.dataTables.min.js"></script>
+    <script src="../CommonJS/angular-datatable.min.js"></script>
+    <script src="~/AngularJS/Reports/PatientHistory/PatientHistory-app.js"></script>
+    <script src="~/AngularJS/Reports/PatientHistory/PatientHistory-controller.js"></script>
+    @*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+
+
+
+}

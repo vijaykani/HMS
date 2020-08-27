@@ -1,0 +1,1064 @@
+﻿@{
+    ViewBag.Title = "Cardiology";
+    Layout = "~/Views/Shared/e_Master.cshtml";
+}
+@section styles{
+    <link href="~/CommonJS/datatables.bootstrap.css" rel="stylesheet" />
+}
+<div ng-app="cardiologyApp" ng-controller="cardiologyCtrl" ng-cloak>
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">Cardiology</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/Dashboard/admin"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="#!">Task</a></li>
+                        <li class="breadcrumb-item"><a href="/Task/Cardiology">Cardiology</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-wrapper">
+        <div class="row">
+            <!-- [ Smart-Wizard ] start -->
+            <div class="col-sm-12">
+                <div class="card" ng-show="IsListDivVisible">
+                    <div class="card-header">
+                        <h5>Patient Cardiology Details</h5>
+                        <div style="float: right; margin-right: 25px;">
+                            <a class="" href="#" title="Add User" style="font-size: 25px;" ng-click="editClickPatient(null,'A')"><i class="feather icon-user-plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-block table-border-style">
+                        <div class="table-responsive m-t-40">
+                            <table id="PatientList" class="table table-hover" style="width: 100%" datatable="ng" dt-options="vm.dtOptions" ui-grid="gridOptions" ui-grid-selection>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="width:15px;">Select Patient</th>
+                                        <th>Patient No</th>
+                                        <th>Patient Name</th>
+                                        <th>Mobile No</th>
+                                        <th>Is Active</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr ng-repeat=" row in patientregList">
+                                        <td>{{ $index +   1 }}</td>
+                                        <td style="text-align:center"><input type="radio" name="checkbox-p-fill-1" class="radiobtn" ng-click="editClickoption(row)" style="padding-right: 10px;width: 18%;height: 2em;" id="checkbox-p-fill-1" value="{{row.Patient_Id}}"></td>
+                                        <td>{{ row.Patient_no }}</td>
+                                        <td>{{ row.FullName }}</td>
+                                        <td>{{ row.Mobileno }}</td>
+                                        <td>
+                                            <span ng-switch on="row.ISACTIVE">
+                                                <img ng-switch-when="Y" src="~/Assets/images/table/tick.jpg" style="width: 25px;">
+                                                <img ng-switch-default src="~/Assets/images/table/cross.jpg" style="width: 25px;">
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            @*<a href="#!" class="btn btn-icon btn-outline-primary has-ripple" style="width: 36px; height: 40px;"><i class="feather icon-edit" ng-click="editClick(row,'E')" title="Edit"></i><span class="ripple ripple-animate" style="height: 45px; width: 45px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(255, 255, 255); opacity: 0.4; top: 1.5px; left: 5.5px;"></span></a>*@
+                                            <a><i class="fa fa-edit text-primary" title="Edit" ng-click="editClickPatient(row,'E')" style="padding-right: 10px;"></i></a>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="card" ng-show="IsEditDivVisible">
+                    <div class="card-header">
+                        <h5>Add Patient</h5>
+                        <div style="float: right; margin-right: 25px;">
+                            <a class="" href="#" title="Cancel" data-toggle="tooltip" style="font-size: 25px;" ng-click="Cancelpatientreg()"><i class="feather icon-user-x"></i></a>
+                        </div>
+                        <div style="float: right; margin-right: 25px;">
+                            <a class="" href="#" title="Save" data-toggle="tooltip" style="font-size: 28px;" ng-click="submitFormPatient(patientregForm.$valid,obj)"><i class="feather icon-save"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <form name="patientregForm" ng-submit="submitFormPatient(patientregForm.$valid,obj)" novalidate>
+                            @*<div class="row">
+                                <div class="col-12 col-md-6">
+
+                                <select id="theme_selector" class="form-control custom-select col-lg-6 col-sm-12">
+                                <option value="default">default</option>
+                                <option value="arrows">arrows</option>
+                                <option value="dots">dots</option>
+                                </select>
+                                <!-- [ External toolbar sample ] End -->
+                                </div>
+                                </div>*@
+                            <!-- [ SmartWizard html ] start -->
+                            <br />
+                            <div id="smartwizard">
+                                <ul>
+                                    <li>
+                                        <a href="#step-1">
+                                            <h6>Step 1</h6>
+                                            <h6>Basic Info</h6>
+                                            @*   <p class="m-0">This is step Basic Information of patient </p>*@
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-2">
+                                            <h6>Step 2</h6>
+                                            <h6>Personal Details</h6>
+                                            @*  <p class="m-0">This is step Personal Details</p>*@
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-3">
+                                            <h6>Step 3</h6>
+                                            <h6>Contact Details</h6>
+                                            @*   <p class="m-0">This is step Contact Details</p>*@
+                                        </a>
+                                    </li>
+                                    @*
+                                        <li>
+                                        <a href="#step-4">
+                                        <h6>Step 4</h6>
+                                        <p class="m-0">This is step content</p>
+                                        </a>
+                                        </li>*@
+                                </ul>
+                                <div>
+                                    <div id="step-1">
+                                        @*<h5>Step 1</h5>*@
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Title</label>
+                                                    @*<input type="text" class="form-control" autocomplete="off" maxlength="60" placeholder="Title" name="Title" ng-model="obj.Title_id">*@
+                                                    <select name="Title" class="form-control" ng-model="obj.Title_id">
+                                                        <option value="">--Choose here--</option>
+                                                        <option value="Mr">Mr</option>
+                                                        <option value="Mrs">Mrs</option>
+                                                        <option value="MissMs">MissMs</option>
+                                                        <option value="Dr">Dr</option>
+                                                        <option value="Prof">Prof</option>
+                                                        <option value="Rev">Rev</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" ng-class="{'has-error':patientregForm.FirstName.$invalid && !patientregForm.FirstName.$pristine,'has-success': patientregForm.FirstName.$valid }">
+                                                <div class="form-group">
+                                                    <label class="form-label">FirstName</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="60" name="FirstName" ng-model="obj.FirstName" required>
+                                                    <p ng-show="patientregForm.FirstName.$invalid && !patientregForm.FirstName.$pristine" class="help-block">This field is required..</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6" ng-class="{'has-error':patientregForm.LName.$invalid && !patientregForm.LName.$pristine,'has-success': patientregForm.LName.$valid }">
+                                                <div class="form-group">
+                                                    <label class="form-label">LastName</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="60" name="LName" ng-model="obj.Lastname" required>
+                                                    <p ng-show="patientregForm.LName.$invalid && !patientregForm.LName.$pristine" class="help-block">This field is required..</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" ng-class="{'has-error':patientregForm.Emailid.$invalid && !patientregForm.Emailid.$pristine,'has-success': patientregForm.Emailid.$valid }">
+                                                <div class="form-group">
+                                                    <label class="form-label">Email Address</label>
+                                                    <input type="email" class="form-control email" autocomplete="off" maxlength="60" placeholder="johnsmith@ashburton.com" name="Emailid" ng-model="obj.Email" validate-email>
+                                                    <p ng-show="patientregForm.Emailid.$invalid && !patientregForm.Emailid.$pristine" style="white-space: pre-wrap; color: yellow;" class="form-text text-muted">Please enter Valid email address.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6" ng-class="{'has-error':patientregForm.Age.$invalid && !patientregForm.Age.$pristine,'has-success': patientregForm.Age.$valid }">
+                                                <div class="form-group">
+                                                    <label class="form-label">Age</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="2" name="Age" ng-model="obj.Age">
+                                                    <p ng-show="patientregForm.Age.$invalid && !patientregForm.Age.$pristine" class="help-block">This field is required..</p>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-6" ng-class="{'has-error':patientregForm.Mobileno.$invalid && !patientregForm.Mobileno.$pristine,'has-success': patientregForm.Mobileno.$valid }">
+                                                <div class="form-group">
+                                                    <label class="form-label">Mobile Number</label>
+                                                    <input type="text" class="form-control mob_no" autocomplete="off" maxlength="60" data-mask="9999-999-999" name="Mobileno" ng-model="obj.Mobileno" id="mobno" required>
+                                                    <p ng-show="patientregForm.Mobileno.$invalid && !patientregForm.Mobileno.$pristine" class="help-block">This field is required..</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div id="step-2">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Gender</label>
+                                                    @*<input type="text" class="form-control" autocomplete="off" maxlength="60" placeholder="Gender" name="Gender" ng-model="obj.Gender">*@
+                                                    <select name="Gender" class="form-control" ng-model="obj.Gender">
+                                                        <option value="" selected disabled hidden>--Choose here--</option>
+                                                        <option value="M">Male</option>
+                                                        <option value="F">Female</option>
+                                                        <option value="O">Others</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-6" ng-class="{'has-error':patientregForm.DOB.$invalid && !patientregForm.DOB.$pristine,'has-success': patientregForm.DOB.$valid }">
+                                                <div class="form-group">
+                                                    <label class="form-label">Date of birth</label>
+                                                    <input id="d_auto" type="text" name="DOB" ng-model="obj.DOB" placeholder="dd/mm/yyyy" class="form-control datepickerFuction" autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Occupation</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="60" name="Occupation" ng-model="obj.Occupation">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Blood Group</label>
+                                                    @*<input type="text" class="form-control" autocomplete="off" maxlength="60" name="Blood_Group" ng-model="obj.Blood_Group">*@
+                                                    <select name="Blood_Group" class="form-control" ng-model="obj.Blood_Group">
+
+                                                        <option value="" selected disabled hidden>--Choose here--</option>
+                                                        <option value="AP">A Positive</option>
+                                                        <option value="AN">A Negative</option>
+                                                        <option value="AU">A Unknown</option>
+                                                        <option value="BP">B Positive</option>
+                                                        <option value="BN">B Negative</option>
+                                                        <option value="BU">B Unknown</option>
+                                                        <option value="ABP">AB Positive</option>
+                                                        <option value="ABN">AB Negative</option>
+                                                        <option value="ABU">AB Unknown</option>
+                                                        <option value="OP">O Positive</option>
+                                                        <option value="ON">O Negative</option>
+                                                        <option value="OU">O Unknown</option>
+                                                        <option value="U">Unknown</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Marital Status</label>
+                                                <select name="Gender" class="form-control" ng-model="obj.Marital_Status">
+                                                    <option value="" selected disabled hidden>--Choose here--</option>
+                                                    <option value="">--Choose here--</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Widowed">Widowed</option>
+                                                    <option value="Separated">Separated</option>
+                                                    <option value="Divorced">Divorced</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Referred by</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="60" name="Refer" ng-model="obj.Referred_by">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Health Details</label>
+                                                    <textarea class="form-control" name="HDetails" ng-model="obj.critical_info" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="step-3">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Home Address</label>
+                                                    <textarea class="form-control" placeholder="1234 Main St" name="Homeaddress" ng-model="obj.Home_address" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Current Address</label>
+                                                    <textarea class="form-control" placeholder="1234 Main St" name="Currentaddress" ng-model="obj.Current_address" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">country</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="60" name="country" ng-model="obj.country">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">State</label>
+
+                                                    <select class="form-control selectpicker show-menu-arrow show-tick" data-live-search="true" data-actions-box="true" ng-change="BindCity(obj)" ng-model="obj.state" name="State" ng-options="State.STATE_CODE as (State.STATE_NAME) for State in StateList">
+                                                        <option value="">--Select State--</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">City</label>
+                                                    <select class="form-control selectpicker show-menu-arrow show-tick" ng-disabled="!obj.state" data-live-search="true" data-actions-box="true" ng-model="obj.City" name="City" ng-options="City.CITY_CODE as (City.CITY_NAME) for City in CityList">
+                                                        <option value="">--Select City--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Ethnicity</label>
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="60" name="country" ng-model="obj.Ethnicity">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="checkbox checkbox-info d-inline">
+                                                    <input type="checkbox" name="IsActive" id="chkIsActive" ng-model="obj.ISACTIVE">
+                                                    <label for="chkIsActive" style="padding-top: 40px; padding-left: 4px;" class="cr">Is Active</label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Cardiology Details</h5>
+                        <br />
+                        <br />
+                        <form name="CardiologyForm" ng-submit="submitFormCardiology(CardiologyForm.$valid,obj)" novalidate>
+
+                            <div class="row" style="padding-left: 18px;">
+                                <div class="card hei-75 wid-75 bg-light d-inline-block mr-2 border border-primary" style="width:100%;    padding-left: 67px;
+    padding-top: 22px;">
+                                    <label class="form-label">Echogencity*</label>
+
+                                    <div class="form-group">
+                                        <div class="radio radio-info d-inline">
+                                            <input type="radio" name="radio-i-in-1" ng-model="obj.Echogencity" value="P" id="radio-i-in-1" ng-checked="true" ng-init="" obj.Echogencity = 'P'>
+                                            <label for="radio-i-in-1" class="cr">Poor</label>
+                                        </div>
+                                        <div class="radio radio-info d-inline">
+                                            <input type="radio" name="radio-i-in-1" ng-model="obj.Echogencity" value="A" id="radio-i-in-2">
+                                            <label for="radio-i-in-2" class="cr">Adequate</label>
+                                        </div>
+                                        <div class="radio radio-info d-inline">
+                                            <input type="radio" name="radio-i-in-1" ng-model="obj.Echogencity" value="G" id="radio-i-in-3">
+                                            <label for="radio-i-in-3" class="cr">Good</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body border-top show">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6 class="text-uppercase text-primary">Dimensions :</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-uppercase text-primary">Normal :</h6>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <h6 class="text-uppercase text-primary">Normal :</h6>
+                                    </div>
+                                </div>
+                                <div class="row prescriptionalign">
+                                    <div class="col-md-3" style="padding-top: 12px;">
+                                        <div class="form-group">
+                                            <label class="form-label">AO (ed)</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="AO" ng-model="obj.AO">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" style="padding-top: 12px;">
+                                        <div class="form-group">
+                                            <label class="form-label">(1.5 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" style="padding-top: 12px;">
+                                        <div class="form-group">
+                                            <label class="form-label">IVS (ed)</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="IVS" ng-model="obj.IVS">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3" style="padding-top: 12px;">
+                                        <div class="form-group">
+                                            <label class="form-label">(0.8  to 1.2 cm)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row prescriptionalign">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">LA (ed)</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="LA" ng-model="obj.LA">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">(1.5 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">LVPW (ed)</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="LVPW" ng-model="obj.LVPW">
+                                            <label class="form-label" style=" min-width: 50px;">cm</label>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">(0.8  to 1.1 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row prescriptionalign">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">RVID (ed)</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="RVID" ng-model="obj.RVID">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">(0.9 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">EF</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="EF" ng-model="obj.EF">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">(0.8  to 1.2 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row prescriptionalign">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">LVID (ed)</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="LVID_one" ng-model="obj.LVID_one">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">(2.6-3.4 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">%FS</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="FS" ng-model="obj.FS">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">(0.8  to 1.2 cm/m²)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row prescriptionalign">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">LVID</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="LVID_Two" ng-model="obj.LVID_Two">
+                                            <label class="form-label" style="min-width: 50px;">cm</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body border-top show">
+                                <h5>MORPHOLOGICAL DATA</h5>
+
+                                <div class="row">
+                                    <div class="col-md-6" style="
+    padding-top: 25px;">
+                                        <div class="form-group">
+                                            <label class="form-label">Mitral Value : AML</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="MitralValue_AML" ng-model="obj.MitralValue_AML">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="
+    padding-top: 25px;">
+                                        <div class="form-group">
+                                            <label class="form-label">Interatrial Septum :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="IntratrialSeptom" ng-model="obj.IntratrialSeptom">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">PML</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="MitralValue_PML" ng-model="obj.MitralValue_PML">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Interventricular Septum :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="IntervendicularSeptom" ng-model="obj.IntervendicularSeptom">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Aortic valve :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="AorticValue" ng-model="obj.AorticValue">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Pulmonary artery :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="PulmonaryArtory" ng-model="obj.PulmonaryArtory">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Tricuspid valve :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="TricuspidValue" ng-model="obj.TricuspidValue">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Aorta :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="Aortia" ng-model="obj.Aortia">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Pulmonary valve :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="PulmonaryValue" ng-model="obj.PulmonaryValue">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Right atrium :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="RightAtrium" ng-model="obj.RightAtrium">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Right ventricle :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="RightVendricle" ng-model="obj.RightVendricle">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Left atrium :</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" name="LeftAtrium" ng-model="obj.LeftAtrium">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Pericardiam :</label>
+                                            <textarea class="form-control" name="Symtoms" ng-model="obj.Pericardiam" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Dopper Studies :</label>
+                                            <textarea class="form-control" name="Symtoms" ng-model="obj.Dopplerstudies" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Impression :</label>
+                                            <textarea class="form-control" name="Symtoms" ng-model="obj.Impression" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div style="text-align:end;" class="col-md-12">
+
+                                        <button type="submit" class="btn btn-outline-primary" title="" data-toggle="tooltip" data-original-title="Submit">Save</button>
+                                        <button class="btn btn-outline-secondary" type="button" ng-click="PrintCardiology()" data-toggle="modal" data-target="#printTable"> Print</button>
+                                        <a class="btn btn-outline-danger " ng-click="CancelPrint()" title="Cancel" data-toggle="tooltip" data-original-title="Cancel">Cancel</a>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- [ Smart-Wizard ] start -->
+                                    <div class="col-sm-12">
+                                        <div class="card" ng-show="IsListCardiologyVisible">
+                                            <div class="card-block">
+                                                <div class="table-responsive m-t-40">
+                                                    <table class="table table-bordered table-striped mb-0 dataTable no-footer" style="width: 100%" datatable="ng" dt-options="vm.dtOptions">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Patient VisitID</th>
+                                                                <th>Echogencity</th>
+                                                                <th>Pericardiam</th>
+                                                                <th>Dopplerstudies</th>
+                                                                <th>Impression</th>
+                                                                <th>Edit</th>
+                                                                <th>Delete</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+
+                                                            <tr ng-repeat=" row in CardiologyList">
+                                                                <td>{{ $index +   1 }}</td>
+                                                                <td>{{ row.PatientVisitID }}</td>
+                                                                <td>{{ row.Echogencity }}</td>
+                                                                <td>{{ row.Pericardiam }}</td>
+                                                                <td>{{ row.Dopplerstudies }}</td>
+                                                                <td>{{ row.Impression }}</td>
+                                                                <td>
+
+                                                                    <a><i class="feather icon-edit mr-1" title="Edit" ng-click="editClickCardiology(row,'E')" style="padding-right: 10px;"></i></a>
+                                                                </td>
+                                                                <td>
+                                                                    @*<a href="#!" class="btn btn-icon btn-outline-primary has-ripple" style="width: 36px; height: 40px;"><i class="feather icon-edit" ng-click="editClick(row,'E')" title="Edit"></i><span class="ripple ripple-animate" style="height: 45px; width: 45px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(255, 255, 255); opacity: 0.4; top: 1.5px; left: 5.5px;"></span></a>*@
+                                                                    <a><i class="feather icon-trash-2" title="Delete" ng-click="DeleteCardiology(row)" style="padding-right: 10px;"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class=" modal fade" id="printTable" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" ng-show="Print">
+                                    <div class="modal-dialog" style="max-width:900px;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Print</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container printTable " id="printTable" ng-show="Print">
+                                                    <div>
+                                                        <div class="card hei-75 wid-75 bg-light d-inline-block mr-2 border border-primary" style="width:100%;">
+
+                                                            <div class="card-block" id="test">
+                                                                <div class="row invoive-info">
+                                                                    <div class="col-md-4 col-xs-12 invoice-client-info">
+                                                                        <h6 class="text-uppercase text-primary">Doctor Information :</h6>
+                                                                        <h6 class="m-0" id="lblDocNam"></h6>
+                                                                        <p class="m-0 m-t-10" id="lblspeciality"></p>
+                                                                        <p class="m-0" id="lblemaildoctor"><a class="text-secondary" href="" target="_top"></a></p>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-xs-12" style="height: auto; font-size: 40px;text-align: center; font-family: 'Malgun Gothic'; font-weight: bold;">
+
+                                                                        <img src="~/Assets/images/172-512.png" style="width: 110px; " />
+
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-xs-12">
+                                                                        <h6 class="text-uppercase text-primary">Address Details :</h6>
+                                                                        <h6 class="m-0" id="lbladdress"></h6>
+                                                                        <p class="m-0 m-t-10" id="lbldmobileno">1065 Mandan Road, Columbia MO, Missouri. (123)-65202</p>
+                                                                        @*<p class="m-0 m-t-10" id="lbldemail"><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">demo@gmail.com</a></p>*@
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body border-top show">
+                                                                    <h6 class="text-uppercase text-primary">Patient Information :</h6>
+                                                                    <br />
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+
+                                                                                <label class="col-form-label font-weight-bolder">Patient : </label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblpname"></label>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Age: </label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblage"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Sex: </label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblsex"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Mobile: </label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblpmobileno"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Echo No:</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Referring Diagnosis:</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Date:</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="col-form-label font-weight-bolder">Referring Dr:</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="card-body border-top show">
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <h6 class="text-uppercase text-primary">Dimension :</h6>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <h6 class="text-uppercase text-primary">Normal :</h6>
+                                                                        </div>
+
+                                                                        <div class="col-md-3">
+                                                                            <h6 class="text-uppercase text-primary">Normal :</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row prescriptionalign">
+                                                                        <div class="col-md-3" style="padding-top: 12px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">AO (ed)</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblAO"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3" style="padding-top: 12px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(1.5 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3" style="padding-top: 12px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">IVS (ed)</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblIVS"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-3" style="padding-top: 12px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(0.8  to 1.2 cm)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row prescriptionalign">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">LA (ed)</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblLA"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(1.5 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">LVPW (ed)</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblLVPW"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(0.8  to 1.1 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row prescriptionalign">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">RVID (ed)</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblRVID"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(0.9 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">EF</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblEF"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(0.8  to 1.2 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row prescriptionalign">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">LVID (ed)</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblLVID1"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(2.6-3.4 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">%FS</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblFS"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label" style="padding-top: 1px;">(0.8  to 1.2 cm/m²)</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">LVID</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblLVID2"></label>
+                                                                                <label class="form-label">cm</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body border-top show">
+                                                                    <h5>MORPHOLOGICAL DATA</h5>
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-6" style="
+    padding-top: 25px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Mitral Value : AML</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblAML"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6" style="
+    padding-top: 25px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Interatrial Septum :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblINTER"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">PML:</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblPML"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Interventricular Septum :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblVENSEPTUM"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Aortic valve :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblARITO"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Pulmonary artery :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblPULMOMORY"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Tricuspid valve :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblTRICUSPID"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Aorta :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblAORTA"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Pulmonary valve :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblPULMONARYVAL"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Right atrium :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblRIGHTATRIUM"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Right ventricle :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblRIGHTVEN"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Left atrium :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblLATRIUM"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4 col-xs-12" style="height: auto; font-size: 16px;text-align: center; font-family: 'Malgun Gothic'; font-weight: bold;">
+
+                                                                            <label class="form-label" style="padding-left: 83px;">LV WALL MOTION ANALYSIS</label>
+                                                                            <img src="~/Assets/images/LeftVentricle.png" style="width: 510px; " />
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row"></div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12" style="padding-top: 50px;">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Pericardiam :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblPERICARIUM"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Dopper Studies :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblDOPPER"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label">Impression :</label>
+                                                                                <label class="col-form-label font-weight-bolder" id="lblIMPRESSION"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @*<div class="row text-center">
+                                                            <div class="col-sm-12 invoice-btn-group text-center">
+                                                                <button type="button" ng-click="Print()" class="btn btn-primary btn-print-invoice m-b-10">Print</button>
+                                                                <button type="button" ng-click="CancelPrint()" class="btn btn-secondary m-b-10 ">Cancel</button>
+                                                            </div>
+                                                        </div>*@
+
+                                                    <div style="text-align:end;" class="col-md-12">
+                                                        <button type="button" ng-click="PrintS()" class="btn btn-outline-secondary" title="" data-toggle="tooltip" data-original-title="Print Preview">Print</button>
+                                                        <a class="btn btn-outline-danger " title="Cancel" data-dismiss="modal" data-toggle="tooltip" data-original-title="Cancel">Cancel</a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="../CommonJS/jquery.dataTables.min.js"></script>
+    <script src="../CommonJS/angular-datatable.min.js"></script>
+    <script src="~/AngularJS/Task/Cardiology/Cardiology-app.js"></script>
+    <script src="~/AngularJS/Task/Cardiology/Cardiology-conroller.js"></script>
+    <script src="~/AngularJS/Task/PatientRegistration/PatientReg-app.js"></script>
+    <script src="~/AngularJS/Task/PatientRegistration/PatientReg-controller.js"></script>
+}
+

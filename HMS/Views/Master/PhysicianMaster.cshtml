@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "PhysicianMaster";
+    Layout = "~/Views/Shared/e_Master.cshtml";
+}
+@section styles{
+    <link href="~/CommonJS/datatables.bootstrap.css" rel="stylesheet" />
+}
+<div ng-app="physicianApp" ng-controller="physicianCtrl" ng-cloak>
+    <div class="page-header">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                    <div class="page-header-title">
+                        <h5 class="m-b-10">PhysicianMaster</h5>
+                    </div>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/Dashboard/admin"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="#!">Master</a></li>
+                        <li class="breadcrumb-item"><a href="/Master/PhysicianMaster">PhysicianMaster</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card" ng-show="IsListDivVisible">
+                        <div class="card-header">
+                            <h5>Physician List</h5>
+                            <div style="float: right; margin-right: 25px;">
+                                <a class="" href="#" title="Add User" style="font-size: 25px;" data-toggle="tooltip" ng-click="editClick(null,'A')"><i class="feather icon-user-plus"></i></a>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <div class="">
+                                <div class="table-responsive m-t-40">
+                                    <table class="table table-hover" style="width: 100%" datatable="ng" dt-options="vm.dtOptions">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Docotor Name</th>
+                                                <th>Mobile No</th>
+                                                <th>Is Active</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr ng-repeat=" row in physicianList">
+                                                <td>{{ $index +   1 }}</td>
+                                                <td>{{ row.DOCTORNAME }}</td>
+                                                <td>{{ row.MOBILENO }}</td>
+                                                <td>
+                                                    <span ng-switch on="row.ISACTIVE">
+                                                        <img ng-switch-when="Y" src="~/Assets/images/table/tick.jpg" style="width: 25px;">
+                                                        <img ng-switch-default src="~/Assets/images/table/cross.jpg" style="width: 25px;">
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    @*<a href="#!" class="btn btn-icon btn-outline-primary has-ripple" style="width: 36px; height: 40px;"><i class="feather icon-edit" ng-click="editClick(row,'E')" title="Edit"></i><span class="ripple ripple-animate" style="height: 45px; width: 45px; animation-duration: 0.7s; animation-timing-function: linear; background: rgb(255, 255, 255); opacity: 0.4; top: 1.5px; left: 5.5px;"></span></a>*@
+                                                    <a><i class="fa fa-edit text-primary" title="Edit" ng-click="editClick(row,'E')" style="padding-right: 10px;"></i></a>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" ng-show="IsEditDivVisible">
+                        <div class="card-header">
+                            <h5>Add Physician</h5>
+                            <div style="float: right; margin-right: 25px;">
+                                <a class="" href="#" title="Cancel" style="font-size: 25px;" ng-click="Cancelphysicianmaster()"><i class="feather icon-user-x"></i></a>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <form name="physicianForm" ng-submit="submitForm(physicianForm.$valid,obj)" novalidate>
+                                <div class="row">
+                                    <div class="col-md-6" ng-class="{'has-error':physicianForm.Dname.$invalid && !physicianForm.Dname.$pristine,'has-success': physicianForm.Dname.$valid }">
+                                        <div class="form-group">
+                                            <label class="form-label">Docotor Name</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" placeholder="Docotor Name" name="Dname" ng-model="obj.DOCTORNAME" required>
+                                            <p ng-show="physicianForm.Dname.$invalid && !physicianForm.Dname.$pristine" class="help-block">This field is required..</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6" ng-class="{'has-error':physicianForm.Speciality.$invalid && !physicianForm.Speciality.$pristine,'has-success': physicianForm.Speciality.$valid }">
+                                        <div class="form-group">
+                                            <label class="form-label">Speciality</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" placeholder="Speciality" name="Speciality" ng-model="obj.SPECIALITY" required>
+                                            <p ng-show="physicianForm.Speciality.$invalid && !physicianForm.Speciality.$pristine" class="help-block">This field is required..</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" ng-class="{'has-error':physicianForm.Mobileno.$invalid && !physicianForm.Mobileno.$pristine,'has-success': physicianForm.Mobileno.$valid }">
+                                        <div class="form-group">
+                                            <label class="form-label">Mobile Number</label>
+                                            <input type="text" class="form-control mob_no" autocomplete="off" maxlength="60" data-mask="9999-999-999" placeholder="Mobile No" name="Mobileno" ng-model="obj.MOBILENO" id="mobno" required>
+                                            <p ng-show="physicianForm.Mobileno.$invalid && !physicianForm.Mobileno.$pristine" class="help-block">This field is required..</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" ng-class="{'has-error':physicianForm.Emailid.$invalid && !physicianForm.Emailid.$pristine,'has-success': physicianForm.Emailid.$valid }">
+                                        <div class="form-group">
+                                            <label class="form-label">Email Address</label>
+                                            <input type="email" class="form-control email" autocomplete="off" maxlength="60" placeholder="johnsmith@ashburton.com" name="Emailid" ng-model="obj.email_address" validate-email>
+                                            <p ng-show="physicianForm.Emailid.$invalid && !physicianForm.Emailid.$pristine" style="white-space: pre-wrap; color: yellow;" class="form-text text-muted">Please enter Valid email address.</p>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Address</label>
+                                            <textarea class="form-control" placeholder="1234 Main St" name="Address" ng-model="obj.ADDRESS_DETAIL" rows="3"></textarea>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">State</label>
+                                                <input type="text" class="form-control" autocomplete="off" maxlength="60" placeholder="State" name="State" ng-model="obj.CUS_STATE">
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">State</label>
+
+                                            <select class="form-control selectpicker show-menu-arrow show-tick" data-live-search="true" data-actions-box="true" ng-change="BindCity(obj)" ng-model="obj.state" name="State" ng-options="State.STATE_CODE as (State.STATE_NAME) for State in StateList">
+                                                <option value="">--Select State--</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">City</label>
+                                            <select class="form-control selectpicker show-menu-arrow show-tick" ng-disabled="!obj.state" data-live-search="true" data-actions-box="true" ng-model="obj.city" name="City" ng-options="City.CITY_CODE as (City.CITY_NAME) for City in CityList">
+                                                <option value="">--Select City--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Zipcode</label>
+                                            <input type="text" class="form-control" autocomplete="off" maxlength="60" placeholder="Zipcode" name="Zipcode" ng-model="obj.zipcode">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Username</label>
+                                            <select class="form-control selectpicker show-menu-arrow show-tick"  data-live-search="true" data-actions-box="true" ng-model="obj.U_ID" name="UID" ng-options="UID.U_ID as (UID.USERNAME) for UID in UserList">
+                                                <option value="">--Select Username--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkbox checkbox-info d-inline">
+                                            <input type="checkbox" name="IsActive" id="chkIsActive" ng-model="obj.ISACTIVE">
+                                            <label for="chkIsActive" style="padding-top: 40px; padding-left: 4px;" class="cr">Is Active</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div style="float: right;">
+                                    <button type="submit" class="btn btn-outline-primary" title="" data-toggle="tooltip" data-original-title="Submit">Submit</button>
+                                    <button type="button" ng-click="Cancelphysicianmaster()" class="btn btn-outline-secondary" title="" data-toggle="tooltip" data-original-title="Cancel">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="../CommonJS/jquery.dataTables.min.js"></script>
+    <script src="../CommonJS/angular-datatable.min.js"></script>
+    <script src="~/AngularJS/Master/PhysicianMaster/PhysicianMaster-app.js"></script>
+    <script src="~/AngularJS/Master/PhysicianMaster/PhysicianMaster-controller.js"></script>
+}
